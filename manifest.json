@@ -1,0 +1,16 @@
+{
+    "manifest_version": 3,
+    "name": "To_Do_List",
+    "version": "1.0.1",
+    "description": "A simple To do list to make your life organised❤️.",
+    "action": {
+        "default_popup": "index.html",
+        "default_icon": "photo.png"
+    },
+    "icons": {
+        "16": "photo.png",
+        "32": "photo.png",
+        "48": "photo.png",
+        "128": "photo.png"
+    }
+}

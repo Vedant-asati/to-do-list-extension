@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat&family=Noto+Serif+Lao&family=Quicksand&family=Roboto+Slab&family=Sacramento&family=Satisfy&family=Tilt+Neon&display=swap"
+        rel="stylesheet">
+    <!-- <link rel="manifest" href="manifest.json"> -->
+    <div class="head">
+        <h1><strong>My <span class="toDo">To Do</span> List</strong></h1>
+    </div>
+</head>
+
+<body>
+    <div id="datetime-local">
+
+    </div>
+    <div class="inputButtons">
+        <br>
+        Task:
+        <input type="text" placeholder=" What's in your mind?" id="inputText" class="placeholder" value="">
+        <br>
+        Link:
+        <input type="url" name="taskLink" id="taskLink" placeholder=" Attach a link" class="placeholder" value="">
+        <br>
+        Remind Me:
+        <input type="datetime-local" name="reminderDateTime"  id="reminderDateTime"> <br>
+        <form action="/action_page.php">
+            <label for="cars" class="setPriority">Priority:</label>
+            <select name="priority" id="priority">
+                <option value="p1">🔴</option>
+                <option value="p2">🟢</option>
+                <option value="p3">🔵</option>
+                <option value="p4">🟡</option>
+            </select>
+            <!-- <br><br> -->
+            <!-- <input type="submit" value="Submit"> -->
+        </form>
+        <button class="btn" id="add-btn">Add</button>
+        <hr>
+    </div>
+    <div id="taskList">
+
+        <p></p>
+
+    </div>
+
+</body>
+<script src="index.js"></script>
+
+</html>
