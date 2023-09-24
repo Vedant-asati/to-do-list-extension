@@ -1,13 +1,22 @@
-const taskDiv = document.querySelector(".taskList");
+// const taskDiv = document.querySelector(".taskList");
 
 
-
+//displaying time on page load
+window.onload = function() {
+    const now = new Date();
+    const dateString = now.toString().replace(/\sGMT.+/, '');
+    document.getElementById("datetime-local").innerHTML = "Time : " + dateString;
+};
 //displaying time
 // let dateTime = Date.now();
 setInterval(displayDate, 1000);
 function displayDate() {
-    document.getElementById("datetime-local").innerHTML = "Time : " + new Date();
+    const now = new Date();
+    const dateString = now.toString().replace(/\sGMT.+/, '');
+    document.getElementById("datetime-local").innerHTML = "Time : " + dateString;
 }
+
+
 
 
 // Array which stores data
@@ -32,11 +41,11 @@ function getData() {
 const updateView = () => {
     const taskList = document.getElementById("taskList");
 
-    // lastChild = taskList.lastElementChild;
-    // while (lastChild) {
-    //     taskList.removeChild(lastChild);
-    //     lastChild = taskList.lastElementChild;
-    // }
+    lastChild = taskList.lastElementChild;
+    while (lastChild) {
+        taskList.removeChild(lastChild);
+        lastChild = taskList.lastElementChild;
+    }
 
     taskArray.forEach((Element, index) => {
 
@@ -46,6 +55,21 @@ const updateView = () => {
 
         const taskText = document.createElement("div");
         taskText.setAttribute("class", Element.isDone ? "taskDone" : "taskNotDone");
+        taskText.innerHTML = (index + 1) + ". " + Element.name;
+
+        const taskLink = document.createElement("div");
+        taskLink.setAttribute("class", "taskLink");
+        taskLink.innerHTML = (index + 1) + ". " + Element.b;
+
+        const taskReminderTime = document.createElement("div");
+        taskReminderTime.setAttribute("class", "taskReminderTime");
+        taskReminderTime.innerHTML = (index + 1) + ". " + Element.c;
+
+        const taskPriority = document.createElement("div");
+        taskPriority.setAttribute("class", "taskPriority");
+        taskPriority.innerHTML = (index + 1) + ". " + Element.d;
+
+
 
         const taskControls = document.createElement("div");
         taskControls.setAttribute("class", "newTaskControls");
@@ -68,7 +92,7 @@ const updateView = () => {
         })
 
         const doneTask = document.createElement("button");
-        doneTask.innerHTML = Event.isDone ? "Undo" : "Done";
+        doneTask.innerHTML = Element.isDone ? "Undo" : "Done";
         doneTask.setAttribute("id", index + "done");
         doneTask.setAttribute("class", "taskDoneButton taskButton");
         doneTask.addEventListener("click", function (event) {
@@ -81,6 +105,9 @@ const updateView = () => {
 
         newTask.appendChild(taskControls);
         newTask.appendChild(taskText);
+        newTask.appendChild(taskLink);
+        newTask.appendChild(taskReminderTime);
+        newTask.appendChild(taskPriority);
         taskList.appendChild(newTask);
 
     }
@@ -98,15 +125,30 @@ const addTask = (isDone) => {
     taskArray.push({ name, isDone, b, c, d });
     localStorage.setItem("savedData", JSON.stringify(taskArray));
     updateView();
-    const placeholderText = document.getElementById("inputText");
-    placeholderText.value = "";
+    const placeholderText1 = document.getElementById("inputText");
+    const placeholderText2 = document.getElementById("taskLink");
+    placeholderText1.value = "";
+    placeholderText2.value = "";
+    setReminder();
 }
 
 
 const editFunction = (id) => {
     const idInt = parseInt(id[0]);
-    const placeholderText = document.getElementById("inputText");
-    placeholderText.value = taskArray[idInt].name;
+
+    const placeholderText1 = document.getElementById("inputText");
+    placeholderText1.value = taskArray[idInt].name;
+
+    const placeholderText2 = document.getElementById("taskLink");
+    placeholderText2.value = taskArray[idInt].b;
+
+    const dateTimeValue = document.getElementById("reminderDateTime");
+    dateTimeValue.value = taskArray[idInt].c;
+
+    const priorityValue = document.getElementById("priority");
+    priorityValue.value = taskArray[idInt].d;
+
+
     taskArray.splice(idInt, 1);
     localStorage.setItem("savedData", JSON.stringify(taskArray));
     updateView();
@@ -117,21 +159,19 @@ const deleteFunction = (id) => {
     taskArray.splice(idInt, 1);
     localStorage.setItem("savedData", JSON.stringify(taskArray));
     updateView();
-
 }
 
 const doneFunction = (id) => {
     const idInt = parseInt(id[0]);
-    Event[idInt].isDone = !Event[idInt].isDone;
+    taskArray[idInt].isDone = !taskArray[idInt].isDone;
+    localStorage.setItem("savedData", JSON.stringify(taskArray));
     updateView();
-    localStorage.setItem("savedData",JSON.stringify(taskArray));
-
 }
 
 
-document.addEventListener("DOMContentLoaded", () =>{
-   const savedData = JSON.parse(localStorage.getItem("savedData"));
-   //spread operator to load the page
+document.addEventListener("DOMContentLoaded", () => {
+    const savedData = JSON.parse(localStorage.getItem("savedData"));
+    //spread operator to load the page
     if (savedData != null) taskArray = [...savedData];
     updateView();
 })
@@ -139,7 +179,9 @@ document.addEventListener("DOMContentLoaded", () =>{
 
 
 // Add task
-document.getElementById("add-btn").addEventListener("click",addTask(false));
+document.getElementById("add-btn").addEventListener("click", function () {
+    addTask(false)
+});
 // document.getElementById("inputText").addEventListener("keydown", function(ev){
 // if(ev.key = "Enter") addTask(false);
 // }
@@ -156,8 +198,35 @@ document.getElementById("add-btn").addEventListener("click",addTask(false));
 
 
 
+
+////////////////////////////////////////
 //setting Reminder
 
+function setReminder() {
+    // get the selected reminder time from the datetime-local input
+    const reminderInput = document.getElementById('reminderDateTime').value;
+
+    // convert the input string to a Date object
+    const reminderTime = new Date(reminderInput);
+
+    // function to check if it's time for  the reminder
+    function checkTime() {
+        const now = new Date();
+        if (now >= reminderTime) {
+
+            // display the reminder message
+            var reminderSound = new Audio('sound.mp3');
+            reminderSound.play();
+            alert('Reminder: Do something important!');
 
 
 
+            // clear the interval to stop checking for reminders
+            clearInterval(reminderInterval);
+        }
+    }
+
+    // set the reminder interval to check every minute
+    const reminderInterval = setInterval(checkTime, 1000);
+    // reminderInterval;
+}
